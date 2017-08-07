@@ -1,6 +1,6 @@
 # BasicMediaPlayer
 
-This project is an example that I attempt to show how to work with audio and video elementary streams and synchronize them with each other.
+This project is an example that I attempt to show how to work with audio and video elementary streams and synchronize them with each other. 
 
 I used a simple trick to sync audio with video (audio based)
 
