@@ -102,4 +102,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             player.stop();
         }
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
 }

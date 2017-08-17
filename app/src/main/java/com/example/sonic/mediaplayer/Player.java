@@ -101,6 +101,7 @@ public class Player {
     }
 
     public void start() {
+
         mPauseLock = new Object();
         isEOS = false;
         isRunning = false;
