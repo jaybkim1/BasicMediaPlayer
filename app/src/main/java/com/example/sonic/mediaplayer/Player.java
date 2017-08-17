@@ -48,7 +48,7 @@ public class Player {
     private int audioIdx = -1, videoIdx = -1;
 
     long startMs = -1;
-    private boolean isEOS = false;
+
     private long audioPtsUs = -1;
 
     // Video and Audio Thread
@@ -58,9 +58,12 @@ public class Player {
     // Thread Control Variables
     private Object mPauseLock;
     private boolean mPaused;
+    private boolean isEOS = false;
+    private  boolean isRunning = false;
 
     // This is where your .mp4 file is located
-    private static final String SAMPLE = Environment.getExternalStorageDirectory() + "/YOUR_FOLDER/sample.mp4";
+//    private static final String SAMPLE = Environment.getExternalStorageDirectory() + "/YOUR_FOLDER/sample.mp4";
+    private static final String SAMPLE = Environment.getExternalStorageDirectory() + "/sonictier/sample_3.mp4";
 
     public Player(Surface surface) throws IOException {
         this.surface = surface;
@@ -100,6 +103,7 @@ public class Player {
     public void start() {
         mPauseLock = new Object();
         isEOS = false;
+        isRunning = false;
         mPaused = false;
 
         startMs = System.currentTimeMillis();
@@ -333,16 +337,23 @@ public class Player {
             ByteBuffer[] videoInputBuffers = videoDecoder.getInputBuffers();
             ByteBuffer[] videoOutputBuffers = videoDecoder.getOutputBuffers();
 
-            while (!Thread.interrupted()) {
+            while (!isRunning) {
                 int currentTrackIdx = -1;
                 synchronized (extractor) {
                     currentTrackIdx = extractor.getSampleTrackIndex();
+                }
+
+                //currentTrackIdx 가 1 에서 종료시에 -1 로 바뀜
+                if (currentTrackIdx == -1) {
+                    isRunning = true;
                 }
 
                 if (currentTrackIdx == videoIdx) {
                     processVideo(videoInputBuffers, videoOutputBuffers);
                 }
             }
+
+            Log.i(TAG, "Video Stopping......");
 
             release();
         }
@@ -359,16 +370,24 @@ public class Player {
             ByteBuffer[] audioInputBuffers = audioDecoder.getInputBuffers();
             ByteBuffer[] audioOutputBuffers = audioDecoder.getOutputBuffers();
 
-            while (!Thread.interrupted()) {
+            while (!isRunning) {
                 int currentTrackIdx = -1;
                 synchronized (extractor) {
                     currentTrackIdx = extractor.getSampleTrackIndex();
+                }
+
+                //currentTrackIdx returns -1 when playback ends
+                if (currentTrackIdx == -1) {
+                    isRunning = true;
                 }
 
                 if (currentTrackIdx == audioIdx) {
                     processAudio(audioInputBuffers, audioOutputBuffers);
                 }
             }
+
+            Log.i(TAG, "Audio Stopping......");
+
             release();
         }
     }
