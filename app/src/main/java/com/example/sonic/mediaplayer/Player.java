@@ -62,8 +62,7 @@ public class Player {
     private  boolean isRunning = false;
 
     // This is where your .mp4 file is located
-//    private static final String SAMPLE = Environment.getExternalStorageDirectory() + "/YOUR_FOLDER/sample.mp4";
-    private static final String SAMPLE = Environment.getExternalStorageDirectory() + "/sonictier/sample_3.mp4";
+    private static final String SAMPLE = Environment.getExternalStorageDirectory() + "/YOUR_FOLDER/sample.mp4";
 
     public Player(Surface surface) throws IOException {
         this.surface = surface;
